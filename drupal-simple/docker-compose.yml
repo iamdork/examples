@@ -1,0 +1,38 @@
+# A simple example for a drupal dork setup. Uses
+# a local copy of the Drupal source code and the
+# official drupal:8 docker image.
+version: '2'
+
+volumes:
+  # Declare two volumes. One for the database, one for
+  # files.
+  database:
+  files:
+
+services:
+  web:
+    build: ./drupal
+    ports:
+    - "80:80"
+    volumes:
+    # Mount files from the defined volume.
+    - files:/var/www/html/sites/default/files
+
+    - ${DORK_SOURCE}/modules:/var/www/html/modules
+    - ${DORK_SOURCE}/themes:/var/www/html/themes
+    - ${DORK_SOURCE}/profiles:/var/www/html/profiles
+    links:
+    - database:database
+
+  database:
+    image: mysql
+    volumes:
+    - database:/var/lib/mysql
+    environment:
+      # Set hardcoded database user and password.
+      # DON'T DO THIS IN REAL PROJECTS
+      MYSQL_USER: drupal
+      MYSQL_PASSWORD: drupal
+      MYSQL_DATABASE: drupal
+      MYSQL_ROOT_PASSWORD: ''
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
