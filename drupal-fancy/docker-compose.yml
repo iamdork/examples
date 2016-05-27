@@ -1,0 +1,53 @@
+version: '2'
+
+networks:
+  front:
+  back:
+
+volumes:
+  database:
+  files:
+
+services:
+  nginx:
+    build: ./nginx
+    environment:
+      DORK_SOURCE_PATH: /source
+    volumes:
+    - files:/var/www/html/sites/default/files
+    ports:
+    - 80:80
+    links:
+    - php:php
+    networks:
+    - front
+
+  php:
+    build: ./php
+    networks:
+    - front
+    - back
+    links:
+    - mysql:database
+    external_links:
+    - dork_aux_dbgp:dbgp
+    volumes:
+    - files:/var/www/web/sites/default/files
+    - ${DORK_SOURCE}/config:/var/www/config
+    - ${DORK_SOURCE}/web/index.php:/var/www/web/index.php
+    environment:
+      DORK_SOURCE_PATH: /source
+      DEVELOPMENT: "yes"
+
+  mysql:
+    image: mysql
+    volumes:
+    - database:/var/lib/mysql
+    networks:
+    - back
+    environment:
+      MYSQL_USER: drupal
+      MYSQL_PASSWORD: drupal
+      MYSQL_DATABASE: drupal
+      MYSQL_ROOT_PASSWORD: ''
+      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'

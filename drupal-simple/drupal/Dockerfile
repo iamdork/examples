@@ -7,3 +7,4 @@ FROM drupal:8
 # If you want something else than 'source', override the
 # DORK_LIBRARY_SOURCE environment variable.
 ADD source /var/www/html
+EXPOSE 80

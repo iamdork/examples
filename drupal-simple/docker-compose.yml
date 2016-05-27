@@ -23,6 +23,8 @@ services:
     - ${DORK_SOURCE}/profiles:/var/www/html/profiles
     links:
     - database:database
+    environment:
+      DORK_SOURCE_PATH: /source
 
   database:
     image: mysql
