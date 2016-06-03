@@ -15,16 +15,17 @@ services:
     ports:
     - "80:80"
     volumes:
-    # Mount files from the defined volume.
     - files:/var/www/html/sites/default/files
-
-    - ${DORK_SOURCE}/modules:/var/www/html/modules
-    - ${DORK_SOURCE}/themes:/var/www/html/themes
-    - ${DORK_SOURCE}/profiles:/var/www/html/profiles
     links:
     - database:database
     environment:
+      # The source directory is added at this path to the
+      # docker build context.
       DORK_SOURCE_PATH: /source
+      # This directory inside the container is the counterpart
+      # to the local source root. Used for automounting working
+      # directories.
+      DORK_SOURCE_ROOT: /var/www/html
 
   database:
     image: mysql
