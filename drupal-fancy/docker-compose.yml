@@ -11,8 +11,10 @@ services:
     build: ./php
     ports:
     - "80:80"
+    hostname: ${DORK_PROJECT}.${DORK_INSTANCE}
     links:
     - mysql:database
+    - mail:mail
     external_links:
     - dork_aux_dbgp:dbgp
     volumes:
@@ -54,3 +56,8 @@ services:
     - mysql:db
     ports:
     - 8080:80
+
+  mail:
+    image: djfarrelly/maildev
+    ports:
+    - 8090:80

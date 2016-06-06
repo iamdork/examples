@@ -40,32 +40,37 @@ done
 tables=$(mysql -N -B -u $MYSQL_USER -h database -p$MYSQL_PASSWORD  -D drupal -e "SHOW TABLES;")
 if [[ $tables ]]; then
   echo "Drupal is already installed."
-  if [ -f /var/www/web/sites/default/settings.php ]; then
-    rm /var/www/web/sites/default/settings.php
+
+  if [ ! -f /var/www/web/sites/default/settings.php ]; then
+    cp /settings.php /var/www/web/sites/default/settings.php
   fi
-  cp /settings.php /var/www/web/sites/default/settings.php
+
 else
   if [ -f /import/drupal.sql ]; then
     # If there is a drupal.sql import it, instead of running a full install.
-    if [ -f /var/www/web/sites/default/settings.php ]; then
-      rm /var/www/web/sites/default/settings.php
+    if [ ! -f /var/www/web/sites/default/settings.php ]; then
+      cp /settings.php /var/www/web/sites/default/settings.php
     fi
-    cp /settings.php /var/www/web/sites/default/settings.php
 
     drush sqlc < /import/drupal.sql
+
+    # Import public files directory.
     if [ -d /import/public ]; then
       cp -af /import/public/* /var/www/web/sites/default/files
     fi
+
+    # Import private files directory.
     if [ -d /import/private ]; then
       cp -af /import/private/* /private
     fi
   else
     # No database dump available, install everything from scratch.
     drush si --account-name=$DRUPAL_ADMIN_USER --account-pass=$DRUPAL_ADMIN_PASS --db-url=mysql://${MYSQL_USER}:${MYSQL_PASSWORD}@database/drupal $DRUPAL_INSTALL_PROFILE -y $DRUPAL_INSTALL_PARAMS
+
+    # Remove the generated settings PHP to replace it with our own one.
     if [ -f /var/www/web/sites/default/settings.php ]; then
       rm /var/www/web/sites/default/settings.php
     fi
-
     cp /settings.php /var/www/web/sites/default/settings.php
   fi
 fi

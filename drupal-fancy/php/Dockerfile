@@ -1,6 +1,6 @@
 FROM drupal:8
 
-RUN apt-get update && apt-get install -y git curl mysql-client && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get install -y ssmtp git curl mysql-client && rm -rf /var/lib/apt/lists/*
 RUN pecl install xdebug
 
 
@@ -16,6 +16,7 @@ RUN chmod +x /init.sh
 # Copy configuration files.
 COPY drushrc.php /root/.drush/drushrc.php
 COPY development.ini /development.ini
+COPY sendmail.ini /usr/local/etc/php/conf.d/sendmail.ini
 COPY settings.php /settings.php
 COPY settings.development.php /settings.development.php
 
