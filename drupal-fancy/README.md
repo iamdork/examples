@@ -11,3 +11,14 @@ This setup also provides some additional development features:
 
 2. **phpMyAdmin:** The database browser everybody loves to hate.
 3. **maildev:** A [maildev](https://github.com/djfarrelly/MailDev) container will catch all emails sent out by PHP. For easier mail debugging and avoiding accidents with real customer data.
+
+## How to start
+
+Take one of your countless projects based on [drupal composer template](https://github.com/drupal-composer/drupal-project) (or start a new one), and place a .env file with the following contents in the root directory:
+
+```
+DORK_LIBRARY_PATH=/path/to/iamdork/examples
+DORK_LIBRARY=drupal-fancy
+```
+
+`dork-compose up -d` should do the rest. Modules and themes in the respective `custom` directories are automatically hotlinked.
