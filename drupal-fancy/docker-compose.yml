@@ -1,53 +1,56 @@
 version: '2'
 
-networks:
-  front:
-  back:
-
 volumes:
   database:
-  files:
+  public:
+  private:
 
 services:
-  nginx:
-    build: ./nginx
-    environment:
-      DORK_SOURCE_PATH: /source
-    volumes:
-    - files:/var/www/html/sites/default/files
-    ports:
-    - 80:80
-    links:
-    - php:php
-    networks:
-    - front
 
-  php:
+  web:
     build: ./php
-    networks:
-    - front
-    - back
+    ports:
+    - "80:80"
     links:
     - mysql:database
     external_links:
     - dork_aux_dbgp:dbgp
     volumes:
-    - files:/var/www/web/sites/default/files
-    - ${DORK_SOURCE}/config:/var/www/config
-    - ${DORK_SOURCE}/web/index.php:/var/www/web/index.php
+    - public:/var/www/web/sites/default/files
+    - private:/private
+    - ${DRUPAL_IMPORT_DIR}:/import
     environment:
       DORK_SOURCE_PATH: /source
-      DEVELOPMENT: "yes"
+      DORK_SOURCE_ROOT: /var/www
+      DEVELOPMENT: ${DRUPAL_DEVELOPMENT}
+      XDEBUG_REMOTE_HOST: ${XDEBUG_REMOTE_HOST}
+      DRUPAL_ADMIN_USER: ${DRUPAL_ADMIN_USER}
+      DRUPAL_ADMIN_PASS: ${DRUPAL_ADMIN_PASS}
+      DRUPAL_INSTALL_PROFILE: ${DRUPAL_INSTALL_PROFILE}
+      DRUPAL_INSTALL_PARAMS: ${DRUPAL_INSTALL_PARAMS}
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
 
   mysql:
     image: mysql
     volumes:
     - database:/var/lib/mysql
-    networks:
-    - back
     environment:
-      MYSQL_USER: drupal
-      MYSQL_PASSWORD: drupal
+      MYSQL_USER: ${MYSQL_USER}
+      MYSQL_PASSWORD: ${MYSQL_PASSWORD}
       MYSQL_DATABASE: drupal
-      MYSQL_ROOT_PASSWORD: ''
-      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+      MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+
+  composer:
+    image: composer/composer
+    volumes:
+    - ${DORK_SOURCE}:/app
+    entrypoint: composer
+    command: install
+
+  phpmyadmin:
+    image: phpmyadmin/phpmyadmin:4.6.0-2
+    links:
+    - mysql:db
+    ports:
+    - 8080:80
