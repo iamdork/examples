@@ -728,4 +728,4 @@ $databases['default']['default'] = array (
   'driver' => 'mysql',
 );
 $settings['install_profile'] = getenv('DRUPAL_INSTALL_PROFILE');
-$config_directories['sync'] = '../config';
+$config_directories['sync'] = getenv('DRUPAL_CONFIG_DIR');
