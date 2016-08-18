@@ -24,8 +24,13 @@ cd /tmp/composer || exit
 composer install --dev
 
 # Remove the private key and token to leave no traces in the image.
-composer config -g github-oauth.github.com deleted
-rm /root/.ssh/id_rsa
+if [ -n "$GITHUB_PRIVATE_TOKEN" ]; then
+  composer config -g github-oauth.github.com deleted
+fi
+
+if [ -n "$SSH_PRIVATE_KEY" ]; then
+  rm /root/.ssh/id_rsa
+fi
 
 # Copy dependencies into place.
 rsync -qrtvu --delete /tmp/composer/ /var/www/
