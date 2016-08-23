@@ -2,7 +2,9 @@ version: '2'
 services:
   web:
     image: iamdork/composer:7-onbuild
-    args:
-      VAULT_TOKEN:
+    build:
+      context: .
+      args:
+        VAULT_TOKEN:
     ports:
     - 80:80
