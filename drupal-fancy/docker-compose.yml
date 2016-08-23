@@ -8,48 +8,41 @@ volumes:
 services:
 
   web:
-    build:
-      context: ./php
+    image: ${DRUPAL_IMAGE}
+    build: 
+      context: .
       args:
-        DRUPAL_DOCROOT: ${DRUPAL_DOCROOT}
-        GITHUB_PRIVATE_TOKEN: ${GITHUB_PRIVATE_TOKEN}
-        SSH_PRIVATE_KEY: ${SSH_PRIVATE_KEY}
+        COMPOSER_WEBROOT: ${COMPOSER_WEBROOT}
         ACCEPT_HOSTS: ${ACCEPT_HOSTS}
+        VAULT_TOKEN:
     ports:
     - "80:80"
-    hostname: ${DORK_PROJECT}.${DORK_INSTANCE}
     links:
     - mysql:database
     - mail:mail
-    external_links:
-    - dork_aux_dbgp:dbgp
     volumes:
-    - ./php/init.sh:/init.sh
-    - public:/var/www${DRUPAL_DOCROOT}/sites/default/files
-    - private:/private
     - ${DRUPAL_IMPORT_DIR}:/import
-    # Mount contrib directories for to be used by the IDE.
-    - ${DORK_SOURCE}/drush/contrib:/dependencies/drush/contrib
-    - ${DORK_SOURCE}/docroot/modules/contrib:/dependencies/docroot/modules/contrib
-    - ${DORK_SOURCE}/docroot/profiles/contrib:/dependencies/docroot/profiles/contrib
-    - ${DORK_SOURCE}/docroot/themes/contrib:/dependencies/docroot/themes/contrib
-    - ${DORK_SOURCE}/docroot/libraries/contrib:/dependencies/docroot/libraries/contrib
-    - ${DORK_SOURCE}/docroot/core:/dependencies/docroot/core
+    - public:/var/www/${COMPOSER_WEBROOT}/sites/default/files
+    - private:/private
     environment:
       SIMPLETEST_BASE_URL: http://${DORK_PROJECT}.${DORK_PROXY_DOMAIN}
-      DORK_SOURCE_PATH: /source
-      DORK_SOURCE_ROOT: /var/www
-      DEVELOPMENT: ${DRUPAL_DEVELOPMENT}
+      DEVELOPMENT: ${DEVELOPMENT}
       XDEBUG_REMOTE_HOST: ${XDEBUG_REMOTE_HOST}
-      DRUPAL_USE_CONFIG_INSTALLER: ${DRUPAL_USE_CONFIG_INSTALLER}
       DRUPAL_ADMIN_USER: ${DRUPAL_ADMIN_USER}
       DRUPAL_ADMIN_PASS: ${DRUPAL_ADMIN_PASS}
+      DRUPAL_SITE: ${DRUPAL_SITE}
       DRUPAL_INSTALL_PROFILE: ${DRUPAL_INSTALL_PROFILE}
       DRUPAL_INSTALL_PARAMS: ${DRUPAL_INSTALL_PARAMS}
-      DRUPAL_DOCROOT: ${DRUPAL_DOCROOT}
+      DRUPAL_PRODUCTION_MODULES: ${DRUPAL_PRODUCTION_MODULES}
+      DRUPAL_DEVELOPMENT_MODULES: ${DRUPAL_DEVELOPMENT_MODULES}
+      COMPOSER_WEBROOT: ${COMPOSER_WEBROOT}
       DRUPAL_CONFIG_DIR: ${DRUPAL_CONFIG_DIR}
+      DRUPAL_USE_CONFIG_INSTALLER: ${DRUPAL_USE_CONFIG_INSTALLER}
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_HOST: ${MYSQL_HOST}
+      MYSQL_PORT: ${MYSQL_PORT}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
 
   mysql:
     image: mysql
@@ -58,7 +51,7 @@ services:
     environment:
       MYSQL_USER: ${MYSQL_USER}
       MYSQL_PASSWORD: ${MYSQL_PASSWORD}
-      MYSQL_DATABASE: drupal
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
       MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
 
   phpmyadmin:

@@ -4,13 +4,10 @@ A more sophisticated example of how to run Drupal with `dork-compose`. It assume
 
 This setup also provides some additional development features:
 
-1. **DBGp Proxy:** A *dbgp* module is included that ensures a [dbgp proxy](https://www.jetbrains.com/help/idea/2016.1/dbgp-proxy.html) is running and connected to each instance. This also serves as an example of a plugin launching an auxiliary service. To active the plugin, add it to your `DORK_PLUGINS` list:
-    ```
-    lib:multi:git:filesystem:proxy:dbgp=/path/to/dork-examples/drupal-fancy/plugins/dbgp/plugin.py
-    ```
-
-2. **phpMyAdmin:** The database browser everybody loves to hate.
-3. **maildev:** A [maildev](https://github.com/djfarrelly/MailDev) container will catch all emails sent out by PHP. For easier mail debugging and avoiding accidents with real customer data.
+1. **phpMyAdmin:** The database browser everybody loves to hate.
+2. **maildev:** A [maildev](https://github.com/djfarrelly/MailDev) container will catch all emails sent out by PHP. For easier mail debugging and avoiding accidents with real customer data.
+3. **auto-install:**  The main container will automatically import a database dump located in the `import` directory or run a fresh site install.
+3. **drush:** Drush is pre-installed and always executs within the 
 
 ## How to start
 

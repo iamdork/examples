@@ -1,0 +1,6 @@
+version: '2'
+services:
+  php:
+    image: iamdork/php:7-onbuild
+    ports:
+    - 80:80

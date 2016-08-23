@@ -1,41 +1,22 @@
 # A simple example for a drupal dork setup. Uses
-# a local copy of the Drupal source code and the
-# official drupal:8 docker image.
+# a local copy of the Drupal source code and an
+# unopinionated php image.
 version: '2'
-
-volumes:
-  # Declare two volumes. One for the database, one for
-  # files.
-  database:
-  files:
 
 services:
   web:
-    build: ./drupal
+    build: iamdork/php:7-onbuild
     ports:
     - "80:80"
-    volumes:
-    - files:/var/www/html/sites/default/files
     links:
     - database:database
-    environment:
-      # The source directory is added at this path to the
-      # docker build context.
-      DORK_SOURCE_PATH: /source
-      # This directory inside the container is the counterpart
-      # to the local source root. Used for automounting working
-      # directories.
-      DORK_SOURCE_ROOT: /var/www/html
 
   database:
     image: mysql
-    volumes:
-    - database:/var/lib/mysql
     environment:
       # Set hardcoded database user and password.
-      # DON'T DO THIS IN REAL PROJECTS
+      # DON'T DO THIS IN PRODUCTION
       MYSQL_USER: drupal
       MYSQL_PASSWORD: drupal
       MYSQL_DATABASE: drupal
-      MYSQL_ROOT_PASSWORD: ''
-      MYSQL_ALLOW_EMPTY_PASSWORD: 'yes'
+      MYSQL_ROOT_PASSWORD: root
