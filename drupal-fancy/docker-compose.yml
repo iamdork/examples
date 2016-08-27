@@ -8,11 +8,9 @@ volumes:
 services:
 
   web:
-    image: ${DRUPAL_IMAGE}
     build: 
-      context: .
+      onbuild: ${DRUPAL_IMAGE}
       args:
-        COMPOSER_WEBROOT: ${COMPOSER_WEBROOT}
         ACCEPT_HOSTS: ${ACCEPT_HOSTS}
         VAULT_TOKEN:
     ports:
@@ -22,7 +20,7 @@ services:
     - mail:mail
     volumes:
     - ${DRUPAL_IMPORT_DIR}:/import
-    - public:/var/www/${COMPOSER_WEBROOT}/sites/default/files
+    - public:/var/www/html/${WEBROOT}/sites/default/files
     - private:/private
     environment:
       SIMPLETEST_BASE_URL: http://${DORK_PROJECT}.${DORK_PROXY_DOMAIN}
@@ -35,7 +33,7 @@ services:
       DRUPAL_INSTALL_PARAMS: ${DRUPAL_INSTALL_PARAMS}
       DRUPAL_PRODUCTION_MODULES: ${DRUPAL_PRODUCTION_MODULES}
       DRUPAL_DEVELOPMENT_MODULES: ${DRUPAL_DEVELOPMENT_MODULES}
-      COMPOSER_WEBROOT: ${COMPOSER_WEBROOT}
+      WEBROOT: ${WEBROOT}
       DRUPAL_CONFIG_DIR: ${DRUPAL_CONFIG_DIR}
       DRUPAL_USE_CONFIG_INSTALLER: ${DRUPAL_USE_CONFIG_INSTALLER}
       MYSQL_USER: ${MYSQL_USER}
