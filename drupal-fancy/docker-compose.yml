@@ -12,15 +12,17 @@ services:
       onbuild: ${DRUPAL_IMAGE}
       args:
         ACCEPT_HOSTS: ${ACCEPT_HOSTS}
+        DRUPAL_WEBROOT: ${WEBROOT}
         VAULT_TOKEN:
     ports:
     - "80:80"
+    - "443:443"
     links:
     - mysql:database
     - mail:mail
     volumes:
     - ${DRUPAL_IMPORT_DIR}:/import
-    - public:/var/www/html/${WEBROOT}/sites/default/files
+    - public:/var/www/${WEBROOT}/sites/default/files
     - private:/private
     environment:
       SIMPLETEST_BASE_URL: http://${DORK_PROJECT}.${DORK_PROXY_DOMAIN}
