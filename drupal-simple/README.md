@@ -5,7 +5,7 @@ An example how to run a simple Drupal site with `dork-compose`. *Should be used 
 Clone the examples repository.
 
 ```
-$ git clone https://github.com/iamdork/examples.git ~/dork-examples
+$ git clone https://github.com/iamdork/examples.git ~/dork-recipes
 ```
 
 Create a `sources` directory to store your project source code.
@@ -18,7 +18,7 @@ $ cd sources
 Add an .env file to tell `dork-compose` where to find the docker setup.
 
 ```
-$ echo "DORK_LIBRARY_PATH=~/dork-examples" > .env
+$ echo "DORK_LIBRARY_PATH=~/dork-recipes" > .env
 ```
 
 Download and extract the latest Drupal sources.
