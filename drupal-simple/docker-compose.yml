@@ -5,11 +5,15 @@ version: '2'
 
 services:
   web:
-    build: iamdork/php:7-onbuild
+    image: drupal:8
+    labels:
     ports:
     - "80:80"
     links:
     - database:database
+    labels:
+      dork.root: /var/www/html
+      dork.hotcode: modules;themes;profiles
 
   database:
     image: mysql

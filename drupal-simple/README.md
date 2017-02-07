@@ -21,12 +21,10 @@ Add an .env file to tell `dork-compose` where to find the docker setup.
 $ echo "DORK_LIBRARY_PATH=~/dork-recipes" > .env
 ```
 
-Download and extract the latest Drupal sources.
+Create a directory for your new drupal project:
 
 ```
-$ curl -fSL "http://ftp.drupal.org/files/projects/drupal-8.1.1.tar.gz" -o drupal.tar.gz
-$ tar -xzf -f drupal.tar.gz && rm drupal.tar.gz
-$ mv drupal-8.1.1 drupal
+$ mkdir drupal
 $ cd drupal
 ```
 
@@ -45,12 +43,7 @@ Library:            /root/dork-examples/drupal-simple
 Project:            drupal
 ```
 
-Now you are ready to fire up your Drupal site with `dork-compose up -d`. Your website should be available at http://drupal.127.0.0.1.xip.io. Create the `settings.php` by running these commands.
-
-```
-$ dork-compose exec web cp sites/default/default.settings.php sites/default/settings.php
-$ dork-compose exec web chown www-data sites/default/settings.php
-```
+Now you are ready to fire up your Drupal site with `dork-compose up -d`. Your website should be available at http://drupal.dork.io. Also, your directory should be populated with drupal source files by now.
 
 Run through the installation process by using the database settings from [docker-compose.yml](docker-compose.yml).
 
