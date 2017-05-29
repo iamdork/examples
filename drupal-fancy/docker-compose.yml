@@ -23,12 +23,14 @@ services:
     - mysql:database
     - mail:mail
     volumes:
+    - ${SSH_PRIVATE_KEY}:/root/.ssh/id_rsa
     - ${DRUPAL_IMPORT_DIR}:/import
     - public:/var/www/${WEBROOT}/sites/default/files
     - private:/private
     environment:
       SIMPLETEST_BASE_URL: http://${DORK_PROJECT}.${DORK_PROXY_DOMAIN}
       DEVELOPMENT: ${DEVELOPMENT}
+      DORK_SETUP: ${DORK_SETUP}
       XDEBUG_REMOTE_HOST: ${XDEBUG_REMOTE_HOST}
       DRUPAL_ADMIN_USER: ${DRUPAL_ADMIN_USER}
       DRUPAL_ADMIN_PASS: ${DRUPAL_ADMIN_PASS}
